@@ -1,4 +1,3 @@
-import { distDir } from "next.config";
 import React, {
   useState,
   useContext,
@@ -6,9 +5,10 @@ import React, {
   useReducer,
   Children,
 } from "react";
+import LoginSection from "./LoginSection";
 
 //create Ref
-const UserContext = createContext("user");
+export const UserContext = createContext("user");
 
 //Initial State
 const initialUser = {
@@ -21,8 +21,12 @@ const initialUser = {
 const reducer = (state, action) => {
   switch (action.type) {
     case "LOGIN":
-      state.authenticated = true;
-      return state;
+      console.log("LOGGING IN");
+      return {
+        ...state,
+        authenticated: true,
+        username: "Sudesh1993",
+      };
     default:
       return state;
   }
@@ -40,9 +44,14 @@ const UserProvider = (props) => {
 };
 
 const ContextContent = () => {
-  const userObj = useContext(UserContext);
-  console.log(userObj);
-  return <div>context3</div>;
+  const [state, dispatch] = useContext(UserContext);
+  console.log(state);
+  return (
+    <div>
+      <div className="username-section">{state.username}</div>
+      <LoginSection />
+    </div>
+  );
 };
 
 const ContextApp = () => {

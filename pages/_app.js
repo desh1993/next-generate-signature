@@ -1,9 +1,25 @@
 import "../styles/globals.css";
 import { SessionProvider, useSession } from "next-auth/react";
+import Composer from "utils/combineProvider";
+import { StoreProvider } from "client/context";
+
+// function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+//   return (
+//     <SessionProvider session={session}>
+//       {Component.auth ? (
+//         <Auth>
+//           <Component {...pageProps} />
+//         </Auth>
+//       ) : (
+//         <Component {...pageProps} />
+//       )}
+//     </SessionProvider>
+//   );
+// }
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
-    <SessionProvider session={session}>
+    <Composer session={session} components={[SessionProvider, StoreProvider]}>
       {Component.auth ? (
         <Auth>
           <Component {...pageProps} />
@@ -11,7 +27,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       ) : (
         <Component {...pageProps} />
       )}
-    </SessionProvider>
+    </Composer>
   );
 }
 
