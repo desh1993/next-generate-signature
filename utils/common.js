@@ -40,3 +40,25 @@ export const getValue = (obj, path, defaultValue) => {
     return defaultValue;
   }
 };
+
+/**
+ *
+ * @param {nested Obj} obj
+ * @param {*} string
+ * @returns object key value(can be an object or be a string)
+ */
+export const findValue = (obj, path) => {
+  let value;
+  let keys = Object.keys(obj);
+  keys.some((key) => {
+    if (key === path) {
+      value = obj[key];
+      return value;
+    }
+    if (obj[key] && typeof obj[key] === "object") {
+      value = findValue(obj[key], path);
+      return value !== undefined;
+    }
+  });
+  return value;
+};
