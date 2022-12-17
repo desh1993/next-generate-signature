@@ -18,7 +18,6 @@ const index = () => {
   // const user = getValue(state, ["user"], null);
   const user = findValue(state, "user");
 
-  console.log(user);
   // if (session) {
   //   return router.replace(`/`);
   // }
