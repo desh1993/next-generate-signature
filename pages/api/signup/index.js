@@ -1,6 +1,6 @@
-import { dbConnect } from "../../../lib/mongoose";
+import dbConnect from "../../../lib/mongoose";
 import bcrypt from "bcrypt";
-import { errorHandler, validateAllOnce } from "utils/common";
+import { errorHandler, validateAllOnce, responseHandler } from "utils/common";
 import User from "@/models/User";
 
 const saveUserToDB = async ({ name, email, password }) => {
@@ -19,6 +19,21 @@ const saveUserToDB = async ({ name, email, password }) => {
   }
 };
 
+const checkIfUserExists = async (email) => {
+  try {
+    const user = await User.findOne({
+      email,
+    }).exec();
+    if (user instanceof User) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return error;
+  }
+};
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     // return error
@@ -28,12 +43,18 @@ export default async function handler(req, res) {
     validateAllOnce(req.body);
     //create db connection
     await dbConnect();
-    //save user to database
-    const user = await saveUserToDB({ name, email, password });
-    if (user instanceof User) {
-      //exclude password field
-      delete user.password;
-      responseHandler(user, res, 201);
+    //check if user exists
+    const ifUserExists = await checkIfUserExists(email);
+    if (ifUserExists === true) {
+      return responseHandler("User already exist", res, 201);
+    } else {
+      //save user to database
+      const user = await saveUserToDB({ name, email, password });
+      if (user instanceof User) {
+        //exclude password field
+        delete user.password;
+        responseHandler(user, res, 201);
+      }
     }
   }
 }

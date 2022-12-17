@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { getValue, findValue } from "utils/common";
 import Loader from "@/components/Loader";
+import axios from "axios";
+import { signup } from "client/request";
 
 const index = () => {
   const { data: session } = useSession();
@@ -29,6 +31,22 @@ const index = () => {
   const signUpHandler = async (e) => {
     e.preventDefault();
     const payload = form;
+    const result = await signup(payload);
+    if (result.hasError) {
+      setErrorMessage(result.errorMessage);
+    } else {
+      setErrorMessage(null);
+      setForm((form) => {
+        return {
+          ...form,
+          name: "",
+          email: "",
+          password: "",
+        };
+      });
+      console.log(result);
+      router.replace(`/login`);
+    }
   };
 
   return (
@@ -37,6 +55,7 @@ const index = () => {
         style={{
           margin: "50px 0",
         }}
+        onSubmit={signUpHandler}
       >
         <h1 className="h3 mb-3 fw-normal">Please sign up</h1>
 

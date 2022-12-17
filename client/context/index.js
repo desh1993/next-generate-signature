@@ -1,5 +1,5 @@
 import { Children, createContext, useContext, useReducer } from "react";
-import { authConstants } from "./constant";
+import { authConstants } from "../constant";
 
 const Store = createContext();
 

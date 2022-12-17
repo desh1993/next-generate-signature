@@ -2,8 +2,23 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
+<<<<<<< HEAD
 import bcrypt from "bcrypt";
 import User from "@/models/User";
+=======
+import User from "@/models/User";
+import bcrypt from "bcrypt";
+
+const login = async (email, password) => {
+  try {
+    const user = await User.findOne({ email }).exec();
+    const isLogin = await bcrypt.compare(password, user.password);
+    return { isLogin, user };
+  } catch (error) {
+    return error;
+  }
+};
+>>>>>>> ac6bef8f395c82a57517eda4164dcd7ff73d3055
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -22,23 +37,15 @@ export const authOptions = {
       async authorize(credentials, req) {
         console.log(`credentials:`, credentials);
         //Login logic
-        const user = {
-          id: "1",
-          name: "J Smith",
-          email: "jsmith@example.com",
-          image:
-            "https://res.cloudinary.com/desh9012/image/upload/v1669436386/ecommerce/1669436383740.png",
-        };
 
         const { email, password } = credentials;
-
-        if (email === "jsmith@example.com" && password === "1234") {
-          // Any object returned will be saved in `user` property of the JWT
+        const { isLogin, user } = await login(email, password);
+        if (isLogin === true) {
+          //to persist authentication
           return user;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
           return null;
-
           // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
       },
@@ -47,12 +54,12 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token to the token right after signin
-      console.log("RUNNING JWT", token);
+      console.log("JWT", { token, account, profile });
       return token;
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
-      console.log("RUNNING SESSION", session, token);
+      console.log("SESSION", { session, token });
       return session;
     },
   },
@@ -60,5 +67,8 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
+  // pages: {
+  //   signIn: "/auth/login",
+  // },
 };
 export default NextAuth(authOptions);
