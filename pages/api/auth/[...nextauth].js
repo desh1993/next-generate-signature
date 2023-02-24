@@ -2,10 +2,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
-<<<<<<< HEAD
-import bcrypt from "bcrypt";
-import User from "@/models/User";
-=======
 import User from "@/models/User";
 import bcrypt from "bcrypt";
 
@@ -18,7 +14,6 @@ const login = async (email, password) => {
     return error;
   }
 };
->>>>>>> ac6bef8f395c82a57517eda4164dcd7ff73d3055
 
 export const authOptions = {
   // Configure one or more authentication providers
