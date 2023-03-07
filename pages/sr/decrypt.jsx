@@ -1,5 +1,5 @@
 /**
- * How to Verify Signature & Decrypt data in front end
+ * How to Verify Signature & Decrypt data on front end
  */
 import React, { useEffect, useState } from "react";
 import { privateKey } from "sr-keys/private_key";
