@@ -61,6 +61,7 @@ const index = () => {
     timestamp: Math.floor(Date.now() / 1000).toString(),
     price: 10.5,
     origin: "",
+    user: "9fSKotvzK7YCtYVdFcDEuXw3erR2",
   });
 
   const [response, setResponse] = useState(null);
@@ -169,6 +170,10 @@ const index = () => {
               value={form.timestamp}
               disabled
             />
+          </div>
+          <div>
+            <label>User : </label>
+            <input type="text" name="user" value={form.user} disabled />
           </div>
         </div>
         <button>Pay By Eforest</button>

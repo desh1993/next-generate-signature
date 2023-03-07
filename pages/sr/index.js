@@ -1,6 +1,10 @@
+/**
+ * How to Generate Signature & Encrypt data in front end
+ */
+
 import axios from "axios";
-import { privateKey } from "staging-keys/private_key";
-import { publicKey } from "staging-keys/public_key";
+import { privateKey } from "sr-keys/private_key";
+import { publicKey } from "sr-keys/public_key";
 import React, { useState, useEffect } from "react";
 import CryptoJS from "crypto-js";
 
@@ -28,15 +32,7 @@ async function Encrypt(form) {
   return encrypted;
 }
 
-async function Decrypt(encrypted) {
-  const JSEncrypt = (await import("jsencrypt")).default;
-  let encrypt = new JSEncrypt();
-  encrypt.setPrivateKey(privateKey);
-  let decrypted = encrypt.decrypt(encrypted);
-  return decrypted;
-}
-
-const API_URL = "http://127.0.0.1:5001/api/bstill/signature/verify";
+const API_URL = "http://127.0.0.1:5001/api/sr/signature/verify";
 
 /**
  *
@@ -53,6 +49,7 @@ async function generateSignature(form) {
   //import library
   const JSEncrypt = (await import("jsencrypt")).default;
   const data = await Encrypt(form); //form is an object
+  console.log(data);
   const sign = new JSEncrypt();
   sign.setPrivateKey(privateKey);
   const signature = sign.sign(data, CryptoJS.SHA256, "sha256");
@@ -70,6 +67,7 @@ const index = () => {
     price: 10.5,
     origin: "",
     user: "9fSKotvzK7YCtYVdFcDEuXw3erR2",
+    merchant: "sr",
   });
 
   const [response, setResponse] = useState(null);
@@ -106,6 +104,7 @@ const index = () => {
             },
           }
         );
+        console.log(signatureData);
         if (signatureData) {
           const { data } = signatureData;
           console.log(data.signed_url);
@@ -181,6 +180,10 @@ const index = () => {
           <div>
             <label>User : </label>
             <input type="text" name="user" value={form.user} disabled />
+          </div>
+          <div>
+            <label>Merchant : </label>
+            <input type="text" name="user" value={form.merchant} disabled />
           </div>
         </div>
         <button>Pay By Eforest</button>
